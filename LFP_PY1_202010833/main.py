@@ -8,6 +8,7 @@ from tkinter import messagebox as MessageBox
 
 
 
+
 def abrirDocumentoForm():
     Tk().withdraw() #Remover ventana
     archivo1 = filedialog.askopenfile(       #Abrir ventana
@@ -33,6 +34,102 @@ def abrirDocumentoForm():
 
 def mostrarDatos(texto):
     txt.insert(INSERT,texto)
+    analizarTexto(texto)
+
+def analizarTexto(t):
+    fila = 0
+    columna = 0
+    
+    x = 0
+    estado = 0 #Estado inicial
+    lexema = ""
+
+    while x < len(t):
+        if estado == 0:
+            if t[x] == " ":
+                x+=1
+            elif t[x] == "\n":
+                x+=1
+            elif t[x] == "\t":
+                x+=1
+            elif t[x].isalpha(): #Estado que guarda caracteres del alfabeto y lo manda al estado 1
+                lexema = ""
+                lexema+= t[x]
+                x+=1
+                estado = 1
+            elif t[x] == "~" or t[x]==">" or t[x]=="[" or t[x]=="<" or t[x]==":" or t[x]=="," or t[x]=="]":
+                lexema = t[x]
+                estado = 2
+            elif t[x] == "\"":
+                lexema=""
+                x+=1
+                estado = 3
+            elif t[x] == "\'":
+                lexema=""
+                x+=1
+                estado = 4
+        elif estado == 1: #Termina de concatenar los caracteres de tipo alfabeto y guarda tokens de palabra reservada
+            if t[x].isalpha():
+                lexema+= t[x]
+                x+=1
+                estado = 1
+                if lexema =="formulario":
+                    print('palabra reservada:',lexema)
+                elif lexema =="tipo":
+                    print('palabra reservada:',lexema)
+                elif lexema =="valores":
+                    print('palabra reservada:',lexema)
+                elif lexema =="fondo":
+                    print('palabra reservada:',lexema)
+                elif lexema =="valor":
+                    print('palabra reservada:',lexema)
+                elif lexema =="evento":
+                    print('palabra reservada:',lexema)
+            else:
+                estado=0
+                
+        elif estado == 2: #Estado de simbolo ~
+            if t[x] == "~" or t[x]==">" or t[x]=="[" or t[x]=="<" or t[x]==":" or t[x]=="," or t[x]=="]":
+                lexema=t[x]
+                print('símbolo:',lexema)
+                x+=1
+                estado = 2
+            else:
+                estado = 0
+        elif estado == 3: #Estado para cadenas e identificadores " "
+            if  t[x] != "\"":
+                lexema+=t[x]
+                x+=1
+                estado = 3
+            
+            else:
+                if lexema =="etiqueta":
+                    print('identificador:',lexema)
+                elif lexema =="texto":
+                    print('identificador',lexema)
+                elif lexema =="grupo-radio":
+                    print('identificador:',lexema)
+                elif lexema =="grupo-option":
+                    print('identificador:',lexema)
+                elif lexema =="boton" or lexema =="botón":
+                    print('identificador:',lexema)   
+                elif lexema =="evento":
+                    print('identificador:',lexema) 
+                else: print('tipo cadena:',lexema)
+                x+=1
+                estado = 0
+        
+        elif estado == 4: #Estado para cadenas e identificadores con ''
+            if  t[x] != "\'":
+                lexema+=t[x]
+                x+=1
+                estado = 4
+            
+            else:
+                print('tipo cadena:',lexema)
+                x+=1
+                estado = 0                      
+
 
 #Interfaz gráfica
 root = tk.Tk()                 #Raiz           
@@ -71,3 +168,4 @@ txt.place(x=25, y=75)
 
 #Visualización
 root.mainloop()
+

@@ -1,4 +1,26 @@
-hafdoacndanckladncljkanfclajnfcñadcñ
-ffffff´r´róó
-	kkfkkfkf}
- ,,,,ll
+formulario ~>> [
+	<
+		tipo: "etiqueta",
+		valor: "Nombre:"
+	>,
+	<
+		tipo: "texto",
+		valor: "Nombre:",
+		fondo: "Ingrese nombre"
+	>,
+	<
+		tipo: "grupo-radio",
+		valor: "Sexo",
+		valores: ['Masculino','Femenino']
+	>,
+	<
+		tipo: "grupo-option",
+		valor: "País",
+		valores: ['Guatemala','El Salvador','Honduras']
+	>,
+	<
+		tipo: "botón",
+		valor: "valor",
+		evento: "entrada"
+	>
+]
