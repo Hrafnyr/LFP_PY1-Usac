@@ -37,50 +37,106 @@ class lista():
         del self.listaTokens[:]
     
     def reporteTokens(self):
-        print('-------------------> Generando reporte, espere...')
-        contadorReportes = 1
-        name = "Reporte"+str(contadorReportes)+".html"
-        reporte = open(name, 'w')
+        if len(self.listaErrores)==0:
+            print('No hay información')
+            MessageBox.showinfo('Atención','No se ha analizado el texto')
+        else:
+            print('-------------------> Generando reporte, espere...')
+            contadorReportes = 1
+            name = "Reporte"+str(contadorReportes)+"Tokens.html"
+            reporte = open(name, 'w')
 
-        html_parte1 = '''
-        <h2 style="text-align: center;">"Reporte de Tokens"</h2>
-        <table style="width: 100%; border-collapse: collapse; border-style: solid;" border="1">
-        <tbody>
-        <tr>
-        <td style="width: 7.56478%; text-align: center; border-style: solid; border-color: black; background-color: midnightblue;"><strong><span style="color: #ffffff;">No.</span></strong></td>
-        <td style="width: 7.56478%; text-align: center; border-style: solid; border-color: black; background-color: midnightblue;"><strong><span style="color: #ffffff;">Token</span></strong></td>
-        <td style="width: 20%; text-align: center; border-style: solid; border-color: black; background-color: midnightblue;"><strong><span style="color: #ffffff;">Lexema</span></strong></td>
-        <td style="width: 7.56478%; text-align: center; border-style: solid; border-color: black; background-color: midnightblue;"><strong><span style="color: #ffffff;">Fila</span></strong></td>
-        <td style="width: 7.56478%; text-align: center; border-style: solid; border-color: black; background-color: midnightblue;"><strong><span style="color: #ffffff;">Columna</span></strong></td>
-        </tr>'''
+            html_parte1 = '''
+            <h2 style="text-align: center;">"Reporte de Tokens"</h2>
+            <table style="width: 100%; border-collapse: collapse; border-style: solid;" border="1">
+            <tbody>
+            <tr>
+            <td style="width: 7.56478%; text-align: center; border-style: solid; border-color: black; background-color: midnightblue;"><strong><span style="color: #ffffff;">No.</span></strong></td>
+            <td style="width: 7.56478%; text-align: center; border-style: solid; border-color: black; background-color: midnightblue;"><strong><span style="color: #ffffff;">Token</span></strong></td>
+            <td style="width: 20%; text-align: center; border-style: solid; border-color: black; background-color: midnightblue;"><strong><span style="color: #ffffff;">Lexema</span></strong></td>
+            <td style="width: 7.56478%; text-align: center; border-style: solid; border-color: black; background-color: midnightblue;"><strong><span style="color: #ffffff;">Fila</span></strong></td>
+            <td style="width: 7.56478%; text-align: center; border-style: solid; border-color: black; background-color: midnightblue;"><strong><span style="color: #ffffff;">Columna</span></strong></td>
+            </tr>'''
+            
+            html_parte2 = ''
+            contador = 1
+            i:token1
+            for i in self.listaTokens:
+                token = i.getToken()
+                valor = i.getValor()
+                fila =  i.getFila()
+                columna = i.getColumna()
+
+                html_parte2 += '''<tr>
+            <td style="width: 7.56478%;">{}</td>
+            <td style="width: 7.56478%;">{}</td>
+            <td style="width: 20%;">{}</td>
+            <td style="width: 7.56478%;">{}</td>
+            <td style="width: 7.56478%;">{}</td>
+            </tr>'''.format(contador,token,valor,fila,columna)
+                contador+=1
         
-        html_parte2 = ''
-        contador = 1
-        i:token1
-        for i in self.listaTokens:
-            token = i.getToken()
-            valor = i.getValor()
-            fila =  i.getFila()
-            columna = i.getColumna()
+            hmtl_fin = '''
+            </tbody>
+            </table>'''
+            
+            html_archivo = html_parte1 + html_parte2 + hmtl_fin
 
-            html_parte2 += '''<tr>
-        <td style="width: 7.56478%;">{}</td>
-        <td style="width: 7.56478%;">{}</td>
-        <td style="width: 20%;">{}</td>
-        <td style="width: 7.56478%;">{}</td>
-        <td style="width: 7.56478%;">{}</td>
-        </tr>'''.format(contador,token,valor,fila,columna)
-            contador+=1
+            reporte.write(html_archivo)
+            reporte.close()
+
+            print('Reporte creado con éxito')
+            contadorReportes+=1
+            webbrowser.open_new_tab(name)
     
-        hmtl_fin = '''
-        </tbody>
-        </table>'''
+    def reporteErrores(self):
+        if len(self.listaErrores)==0:
+            print('No hay información')
+            MessageBox.showinfo('Atención','No ha analizado el texto')
+        else:
+            print('-------------------> Generando reporte, espere...')
+            contadorReportes = 1
+            name = "Reporte"+str(contadorReportes)+"Error.html"
+            reporte = open(name, 'w')
+
+            html_parte1 = '''
+            <h2 style="text-align: center;">"Reporte de Errores"</h2>
+            <table style="width: 100%; border-collapse: collapse; border-style: solid;" border="1">
+            <tbody>
+            <tr>
+            <td style="width: 7.56478%; text-align: center; border-style: solid; border-color: black; background-color: midnightblue;"><strong><span style="color: #ffffff;">No.</span></strong></td>
+            <td style="width: 7.56478%; text-align: center; border-style: solid; border-color: black; background-color: midnightblue;"><strong><span style="color: #ffffff;">Caracter o token</span></strong></td>
+            <td style="width: 20%; text-align: center; border-style: solid; border-color: black; background-color: midnightblue;"><strong><span style="color: #ffffff;">tipo</span></strong></td>
+            <td style="width: 7.56478%; text-align: center; border-style: solid; border-color: black; background-color: midnightblue;"><strong><span style="color: #ffffff;">Fila</span></strong></td>
+            <td style="width: 7.56478%; text-align: center; border-style: solid; border-color: black; background-color: midnightblue;"><strong><span style="color: #ffffff;">Columna</span></strong></td>
+            </tr>'''
+            
+            html_parte2 = ''
+            contador = 1
+            e:error
+            for e in self.listaErrores:
+                caracter = e.getCaracter()
+                tipo = e.getTipo()
+                fila = e.getFila()
+                columna = e.getColumna()
+                html_parte2 += '''<tr>
+            <td style="width: 7.56478%;">{}</td>
+            <td style="width: 7.56478%;">{}</td>
+            <td style="width: 20%;">{}</td>
+            <td style="width: 7.56478%;">{}</td>
+            <td style="width: 7.56478%;">{}</td>
+            </tr>'''.format(contador,caracter,tipo,fila,columna)
+                contador+=1
         
-        html_archivo = html_parte1 + html_parte2 + hmtl_fin
+            hmtl_fin = '''
+            </tbody>
+            </table>'''
+            
+            html_archivo = html_parte1 + html_parte2 + hmtl_fin
 
-        reporte.write(html_archivo)
-        reporte.close()
+            reporte.write(html_archivo)
+            reporte.close()
 
-        print('Reporte creado con éxito')
-        contadorReportes+=1
-        webbrowser.open_new_tab(name)
+            print('Reporte creado con éxito')
+            contadorReportes+=1
+            webbrowser.open_new_tab(name)

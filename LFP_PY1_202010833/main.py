@@ -160,6 +160,10 @@ def verReportes():
     op = listaReportes.get()
     if op =="Reporte de tokens":
         data.reporteTokens()
+    elif op =="Reporte de errores":
+        data.reporteErrores()
+    else:
+        print('NONE')
     
 
 #Interfaz gráfica
