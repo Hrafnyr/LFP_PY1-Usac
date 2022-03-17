@@ -37,7 +37,7 @@ def mostrarDatos(texto):
     return texto
 
 def analizarTexto():
-    
+    data.eliminarTodo()
     t = txt.get("1.0", tk.END)
     fila = 1
     columna = 1
@@ -78,7 +78,7 @@ def analizarTexto():
                 x+=1
                 estado = 4
             else:
-                data.insertError(t[x],fila,columna)
+                data.insertError(t[x],"Caracter desconocido",fila,columna)
                 columna +=1
                 x+=1
                 estado = 0 
@@ -86,9 +86,10 @@ def analizarTexto():
         elif estado == 1: #Termina de concatenar los caracteres de tipo alfabeto y guarda tokens de palabra reservada
             if t[x].isalpha():
                 lexema+= t[x]
-                
-                x+=1
+                x+=1     
+                columna +=1         
                 estado = 1
+            else:
                 if lexema =="formulario":
                     data.insertarToken("Token palabra reservada",lexema,fila,columna)
                 elif lexema =="tipo":
@@ -101,8 +102,8 @@ def analizarTexto():
                     data.insertarToken("Token palabra reservada",lexema,fila,columna)
                 elif lexema =="evento":
                     data.insertarToken("Token palabra reservada",lexema,fila,columna)
-                columna +=1
-            else:
+                else:
+                    data.insertError(lexema,"Palabra mal escrita",fila,columna)
                 estado=0
                 
         elif estado == 2: #Estado de símbolos
@@ -154,6 +155,11 @@ def analizarTexto():
 
     data.mostrarErrores()
     data.mostrarTokens()
+
+def verReportes():
+    op = listaReportes.get()
+    if op =="Reporte de tokens":
+        data.reporteTokens()
     
 
 #Interfaz gráfica
@@ -183,7 +189,7 @@ reportes = ['Reporte de errores', 'Reporte de tokens','Manual de usuario','Manua
 listaReportes['values'] = reportes
 
 #Botón 3
-botonAceptar = tk.Button(text="Aceptar")
+botonAceptar = tk.Button(text="Aceptar", command=verReportes)
 botonAceptar.place(x=630, y=18)
 botonAceptar.config(font=("Courier", 10), bg="#0A1246",fg="white",width=6)
 
