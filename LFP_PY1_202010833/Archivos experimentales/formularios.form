@@ -1,7 +1,7 @@
 formulario ~>> [
 	<
 		tipo: "etiqueta",
-		valor: "Nombre:"
+        val!or: "Nombre:"
 	>,
 	<
 		tipo: "texto",
@@ -16,11 +16,11 @@ formulario ~>> [
 	<
 		tipo: "grupo-option",
 		valor: "País",
-		valores: ['Guatemala','El Salvador','Honduras']
+		valore??s: ['Guatemala','El Salvador','Honduras']
 	>,
 	<
 		tipo: "botón",
 		valor: "valor",
-		evento: "entrada"
+	!	evento: "entrada"
 	>
 ]

@@ -4,3 +4,6 @@ class error: #Guarda los tokens analizados
         self.caracter = caracter
         self.fila = fila
         self.columna = columna
+
+    def enviarErrores(self):
+        return [self.caracter,self.fila, self.columna]

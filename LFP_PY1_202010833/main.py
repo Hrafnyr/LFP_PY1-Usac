@@ -1,4 +1,5 @@
 
+from listas import lista
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
@@ -6,8 +7,7 @@ from tkinter import scrolledtext as stxt
 from tkinter import filedialog
 from tkinter import messagebox as MessageBox
 
-
-
+data = lista()
 
 def abrirDocumentoForm():
     Tk().withdraw() #Remover ventana
@@ -25,7 +25,7 @@ def abrirDocumentoForm():
         MessageBox.showinfo('Atención','No se seleccionó ningún archivo')
         return None
     else:
-        ruta = archivo1.name
+        ruta = archivo1.name #Obtener ruta
         t = open(ruta, 'r',encoding='utf-8')  #Si se seleccionó, leer el archivo y cerrarlo
         texto = t.read()
         mostrarDatos(texto)
@@ -33,66 +33,84 @@ def abrirDocumentoForm():
         return texto
 
 def mostrarDatos(texto):
-    txt.insert(INSERT,texto)
-    analizarTexto(texto)
+    txt.insert(INSERT,texto) #insertar texto en el scrolledtext
+    return texto
 
-def analizarTexto(t):
-    fila = 0
-    columna = 0
+def analizarTexto():
     
-    x = 0
+    t = txt.get("1.0", tk.END)
+    fila = 1
+    columna = 1
+    x = 0   #Indice
     estado = 0 #Estado inicial
     lexema = ""
 
     while x < len(t):
         if estado == 0:
-            if t[x] == " ":
+            if t[x] == " ": #No se analiza espacio,salto de línea ni tabulación
                 x+=1
+                columna +=1
             elif t[x] == "\n":
+                fila +=1
+                columna =1
                 x+=1
             elif t[x] == "\t":
                 x+=1
+                columna +=8
             elif t[x].isalpha(): #Estado que guarda caracteres del alfabeto y lo manda al estado 1
                 lexema = ""
                 lexema+= t[x]
                 x+=1
                 estado = 1
+                columna +=1
             elif t[x] == "~" or t[x]==">" or t[x]=="[" or t[x]=="<" or t[x]==":" or t[x]=="," or t[x]=="]":
                 lexema = t[x]
                 estado = 2
-            elif t[x] == "\"":
+                
+            elif t[x] == "\"": #Cadenas con "" y ''
+                columna +=1
                 lexema=""
                 x+=1
                 estado = 3
             elif t[x] == "\'":
+                columna +=1
                 lexema=""
                 x+=1
                 estado = 4
+            else:
+                data.insertError(t[x],fila,columna)
+                columna +=1
+                x+=1
+                estado = 0 
+            
         elif estado == 1: #Termina de concatenar los caracteres de tipo alfabeto y guarda tokens de palabra reservada
             if t[x].isalpha():
                 lexema+= t[x]
+                
                 x+=1
                 estado = 1
                 if lexema =="formulario":
-                    print('palabra reservada:',lexema)
+                    data.insertarToken("Token palabra reservada",lexema,fila,columna)
                 elif lexema =="tipo":
-                    print('palabra reservada:',lexema)
+                    data.insertarToken("Token palabra reservada",lexema,fila,columna)
                 elif lexema =="valores":
-                    print('palabra reservada:',lexema)
+                    data.insertarToken("Token palabra reservada",lexema,fila,columna)
                 elif lexema =="fondo":
-                    print('palabra reservada:',lexema)
+                    data.insertarToken("Token palabra reservada",lexema,fila,columna)
                 elif lexema =="valor":
-                    print('palabra reservada:',lexema)
+                    data.insertarToken("Token palabra reservada",lexema,fila,columna)
                 elif lexema =="evento":
-                    print('palabra reservada:',lexema)
+                    data.insertarToken("Token palabra reservada",lexema,fila,columna)
+                columna +=1
             else:
                 estado=0
                 
-        elif estado == 2: #Estado de simbolo ~
+        elif estado == 2: #Estado de símbolos
             if t[x] == "~" or t[x]==">" or t[x]=="[" or t[x]=="<" or t[x]==":" or t[x]=="," or t[x]=="]":
                 lexema=t[x]
-                print('símbolo:',lexema)
+                data.insertarToken("Token tipo símbolo",lexema,fila,columna)
                 x+=1
+                columna +=1
                 estado = 2
             else:
                 estado = 0
@@ -100,36 +118,43 @@ def analizarTexto(t):
             if  t[x] != "\"":
                 lexema+=t[x]
                 x+=1
+                columna +=1
                 estado = 3
             
-            else:
+            else:   
                 if lexema =="etiqueta":
-                    print('identificador:',lexema)
+                    data.insertarToken("Token identificador",lexema,fila,columna)
                 elif lexema =="texto":
-                    print('identificador',lexema)
+                    data.insertarToken("Token identificador",lexema,fila,columna)
                 elif lexema =="grupo-radio":
-                    print('identificador:',lexema)
+                    data.insertarToken("Token identificador",lexema,fila,columna)
                 elif lexema =="grupo-option":
-                    print('identificador:',lexema)
+                    data.insertarToken("Token identificador",lexema,fila,columna)
                 elif lexema =="boton" or lexema =="botón":
-                    print('identificador:',lexema)   
+                    data.insertarToken("Token identificador",lexema,fila,columna)
                 elif lexema =="evento":
-                    print('identificador:',lexema) 
-                else: print('tipo cadena:',lexema)
+                    data.insertarToken("Token identificador",lexema,fila,columna)
+                else: data.insertarToken("Token cadena",lexema,fila,columna)
                 x+=1
+                columna +=1
                 estado = 0
         
         elif estado == 4: #Estado para cadenas e identificadores con ''
             if  t[x] != "\'":
                 lexema+=t[x]
+                columna +=1
                 x+=1
                 estado = 4
             
             else:
-                print('tipo cadena:',lexema)
+                data.insertarToken("Token cadena",lexema,fila,columna)
                 x+=1
-                estado = 0                      
+                columna +=1
+                estado = 0
 
+    data.mostrarErrores()
+    data.mostrarTokens()
+    
 
 #Interfaz gráfica
 root = tk.Tk()                 #Raiz           
@@ -146,7 +171,7 @@ botonCargar.place(x=25, y=20)
 botonCargar.config(font=("Courier", 12), bg="#0A1246",fg="white",width=15)
 
 #Botón 2
-botonAnalizar = tk.Button(text="Analizar")
+botonAnalizar = tk.Button(text="Analizar", command=analizarTexto)
 botonAnalizar.place(x=25, y=350)
 botonAnalizar.config(font=("Courier", 12), bg="#0A1246",fg="white",width=10)
 
