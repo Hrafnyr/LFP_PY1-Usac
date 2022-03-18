@@ -33,10 +33,11 @@ def abrirDocumentoForm():
         return texto
 
 def mostrarDatos(texto):
+    txt.delete("1.0", "end") 
     txt.insert(INSERT,texto) #insertar texto en el scrolledtext
     return texto
 
-def analizarTexto():
+def analizarTexto(): 
     data.eliminarTodo()
     t = txt.get("1.0", tk.END)
     fila = 1
@@ -135,7 +136,7 @@ def analizarTexto():
                     data.insertarToken("Token identificador",lexema,fila,columna)
                 elif lexema =="evento":
                     data.insertarToken("Token identificador",lexema,fila,columna)
-                else: data.insertarToken("Token cadena",lexema,fila,columna)
+                else: data.insertarToken("Token cadena comilla doble",lexema,fila,columna)
                 x+=1
                 columna +=1
                 estado = 0
@@ -148,7 +149,7 @@ def analizarTexto():
                 estado = 4
             
             else:
-                data.insertarToken("Token cadena",lexema,fila,columna)
+                data.insertarToken("Token cadena simple",lexema,fila,columna)
                 x+=1
                 columna +=1
                 estado = 0
@@ -165,6 +166,10 @@ def verReportes():
     else:
         print('NONE')
     
+def verHtml():
+    t = True
+    if t:
+        data.crearHtml()
 
 #Interfaz gráfica
 root = tk.Tk()                 #Raiz           
@@ -184,6 +189,11 @@ botonCargar.config(font=("Courier", 12), bg="#0A1246",fg="white",width=15)
 botonAnalizar = tk.Button(text="Analizar", command=analizarTexto)
 botonAnalizar.place(x=25, y=350)
 botonAnalizar.config(font=("Courier", 12), bg="#0A1246",fg="white",width=10)
+
+#Botón 4
+botonEjecutar = tk.Button(text="Ejecutar",command=verHtml)
+botonEjecutar.place(x=525, y=350)
+botonEjecutar.config(font=("Courier", 12), bg="#0A1246",fg="white",width=10)
 
 #lista de Reportes
 listaReportes = ttk.Combobox(root, width="17",state="readonly")

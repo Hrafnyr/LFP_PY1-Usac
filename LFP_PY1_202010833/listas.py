@@ -1,3 +1,4 @@
+from math import radians
 from guardarToken import token1
 from errores import error
 from tkinter import messagebox as MessageBox
@@ -140,3 +141,80 @@ class lista():
             print('Reporte creado con éxito')
             contadorReportes+=1
             webbrowser.open_new_tab(name)
+    
+    def crearHtml(self):
+
+
+        cabecera = '''
+        <!DOCTYPE html>
+        <html>
+        <body style="background-color:#C9FBC9;">
+        <form action="ejemplo.php" method="get">
+        <h1 style="text-align: center;"><strong>Formulario</strong></h1>'''
+
+        txtEtiqueta = ""
+        txtTexto = ""
+        txtgRadio = ""
+        txtgOption = ""
+        txtBoton = ""
+        htmlTxt = ""
+    
+        for i in range(len(self.listaTokens)): #Recorre tokens
+            if self.listaTokens[i].getValor()=="<": #Abertura
+                while self.listaTokens[i].getValor() !=">": #Guardará los datos dentro de <>
+                    #print(self.listaTokens[i].getValor())
+                    
+                    if self.listaTokens[i].getValor() == "etiqueta": #Accede a etiqueta
+                        e = i
+                        while self.listaTokens[e].getValor() !=">": 
+                            if self.listaTokens[e].getToken() == "Token cadena comilla doble":
+                                htmlTxt+= '''<br><br><label><strong>{}</strong></label>'''.format(self.listaTokens[e].getValor())
+                                #print('valor etiqueta:',self.listaTokens[i].getValor())
+                            e+=1
+                    
+                    elif self.listaTokens[i].getValor() == "texto": #Accede a texto
+                        contador = 0
+                        e = i
+                        while self.listaTokens[e].getValor() !=">"and contador<1:
+                            if self.listaTokens[e].getToken() == "Token cadena comilla doble":
+                                htmlTxt += '''<input type="text" name="{}" size="50" placeholder="{}">'''.format(self.listaTokens[e].getValor(),self.listaTokens[e+4].getValor())
+                                #print('valor texto',self.listaTokens[i].getValor(),'-',self.listaTokens[i+4].getValor())
+                                contador=2
+                            e+=1
+
+                    elif self.listaTokens[i].getValor() == "grupo-radio": #Accede a grupo radio
+                        e = i
+                        while self.listaTokens[e].getValor() !=">": #Guardará los datos dentro de <>
+                            if self.listaTokens[e].getToken() == "Token cadena comilla doble":
+                                htmlTxt+= '''  <p>{}</p>'''.format(self.listaTokens[e].getValor())
+                            elif self.listaTokens[e].getToken() == "Token cadena simple":
+                                htmlTxt+= '''<input type="radio" name="hm" value="h"> {}'''.format(self.listaTokens[e].getValor())
+                            #print('valor:',self.listaTokens[i].getValor())
+                            e+=1
+
+                    elif self.listaTokens[i].getValor() == "grupo-option": #Accede a grupo option
+                        e = i
+                        while self.listaTokens[e].getValor() !=">": #Guardará los datos dentro de <>
+                            if self.listaTokens[e].getToken() == "Token cadena comilla doble":
+                                htmlTxt+= '''  <p>{}</p>'''.format(self.listaTokens[e].getValor())
+                                htmlTxt+= '''<select name="select">'''
+                            elif self.listaTokens[e].getToken() == "Token cadena simple":
+                                htmlTxt+= '''<option value="value1">{}</option>'''.format(self.listaTokens[e].getValor())
+                            
+                            #print('valor:',self.listaTokens[i].getValor())
+                            e+=1
+                        htmlTxt+= '''</select>'''
+                    i+=1
+
+        final ='''</form>
+        </body>
+        </html>'''
+        html = cabecera + htmlTxt +final
+
+        name = "Formulario.html"
+        reporte = open(name, 'w')
+        reporte.write(html)
+        reporte.close()
+        print('Reporte creado con éxito')
+        webbrowser.open_new_tab(name)
+
