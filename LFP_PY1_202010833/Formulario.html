@@ -2,7 +2,16 @@
         <!DOCTYPE html>
         <html>
         <body style="background-color:#C9FBC9;">
-        <form action="ejemplo.php" method="get">
-        <h1 style="text-align: center;"><strong>Formulario</strong></h1><br><br><label><strong>Nombre:</strong></label><input type="text" name="Nombre:" size="50" placeholder="Ingrese nombre">  <p>Sexo</p><input type="radio" name="hm" value="h"> Masculino<input type="radio" name="hm" value="h"> Femenino  <p>País</p><select name="select"><option value="value1">Guatemala</option><option value="value1">El Salvador</option><option value="value1">Honduras</option></select><br><br><label><strong>Comentario:</strong></label><input type="text" name="cm:" size="50" placeholder="Comentar xd"></form>
+        <form action="ejemplo.php" method="get" name="form1">
+        <h1 style="text-align: center;"><strong>Formulario</strong></h1><br><br><label><strong>Nombre:</strong></label><input type="text" id="txto1" name="txt" value="Nombre" size="50" placeholder="Ingrese nombre"><input type="text" id="txto2" name="txt" value="Loco" size="50" placeholder="Ingrese apellido">  <p>sexo</p><input type="radio" name="hm" value="h"> Masculino<input type="radio" name="hm" value="h"> Femenino<input type="radio" name="hm" value="h"> Otro</form><p><button name="button" onclick="funcionMostrar()">Click me</button></p>
+                                <script type="text/javascript">
+                                        function funcionMostrar() {
+                                            var ifrm = document.createElement('iframe');
+                                            ifrm.src ="Entrada.html"
+                                            ifrm.style.width = "640px";
+                                            ifrm.style.height = "480px";
+                                            document.body.appendChild(ifrm);
+                                        }
+                                    </script>   <p>país</p><select name="select" id="s7"><option value="value1">Guatemala</option><option value="value1">El salvador</option><option value="value1">Honduras</option><option value="value1">Rusia</option>;</select>
         </body>
         </html>

@@ -21,7 +21,16 @@ formulario ~>> [
 	<
 		tipo: "botón",
 		valor: "valor",
-		evento: "entrada"
+		evento: entrada
+	>,
+	<
+		tipo: "etiqueta",
+        valor: "Dirección:"
+	>,
+	<
+		tipo: "texto",
+		valor: "Guatemala",
+		fondo: "Ingrese nombre"
 	>
 ]
 
