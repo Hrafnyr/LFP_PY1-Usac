@@ -1,4 +1,5 @@
 
+
 from listas import lista
 import tkinter as tk
 from tkinter import *
@@ -6,6 +7,8 @@ from tkinter import ttk
 from tkinter import scrolledtext as stxt
 from tkinter import filedialog
 from tkinter import messagebox as MessageBox
+import webbrowser
+
 
 data = lista()
 
@@ -41,6 +44,7 @@ def mostrarDatos(texto):
 def analizarTexto(): 
     data.eliminarTodo()
     t = txt.get("1.0", tk.END)
+    data.botonEvento(t)
     fila = 1
     columna = 1
     x = 0   #Indice
@@ -199,6 +203,12 @@ def verReportes():
         data.reporteTokens()
     elif op =="Reporte de errores":
         data.reporteErrores()
+    elif op =="Manual de usuario":
+        path = r"D:\Moises\Documents\USAC\SEMESTRE 5\lenguajes formales 1\Proyecto 1\LFP_PY1_202010833\Documentación\Manual de usuario.pdf"
+        webbrowser.open_new(path)
+    elif op =="Manual técnico":
+        path = r"D:\Moises\Documents\USAC\SEMESTRE 5\lenguajes formales 1\Proyecto 1\LFP_PY1_202010833\Documentación\Manual Técnico.pdf"
+        webbrowser.open_new(path)
     else:
         print('NONE')
     
@@ -207,7 +217,7 @@ def verHtml():
     if t:
         data.crearHtml()
 
-#Interfaz gráfica
+#------------------------------------------------Interfaz gráfica
 root = tk.Tk()                 #Raiz           
 #Configuración
 root.title('Menú principal')      
