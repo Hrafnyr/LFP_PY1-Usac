@@ -1,5 +1,5 @@
 
-
+import os as documento
 from listas import lista
 import tkinter as tk
 from tkinter import *
@@ -204,10 +204,10 @@ def verReportes():
     elif op =="Reporte de errores":
         data.reporteErrores()
     elif op =="Manual de usuario":
-        path = r"D:\Moises\Documents\USAC\SEMESTRE 5\lenguajes formales 1\Proyecto 1\LFP_PY1_202010833\Documentación\Manual de usuario.pdf"
+        path = documento.path.dirname(documento.path.abspath(__file__))+ "\Documentación\Manual de Usuario.pdf"
         webbrowser.open_new(path)
     elif op =="Manual técnico":
-        path = r"D:\Moises\Documents\USAC\SEMESTRE 5\lenguajes formales 1\Proyecto 1\LFP_PY1_202010833\Documentación\Manual Técnico.pdf"
+        path = documento.path.dirname(documento.path.abspath(__file__))+ "\Documentación\Manual Técnico.pdf"
         webbrowser.open_new(path)
     else:
         print('NONE')
